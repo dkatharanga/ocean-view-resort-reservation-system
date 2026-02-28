@@ -14,7 +14,6 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * TDD Unit Tests — Bill Calculation Logic
  *
- * These tests define the expected billing behaviour for the OceanView system.
  * Room rates: Standard=5000 | Deluxe=8000 | Suite=12000 (per night)
  *
  * Test IDs: TC-BC-xx

@@ -9,11 +9,7 @@ import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * ValidationService — Service Design Pattern
- * Centralises all validation logic, keeping controllers clean.
- * Single Responsibility: only handles validation rules.
- */
+
 @Service
 public class ValidationService {
 
