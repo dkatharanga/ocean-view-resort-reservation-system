@@ -1,20 +1,22 @@
-# .github/workflows/backend-ci.yml
-name: OceanView Backend CI
+name: CI
 
 on:
   push:
-    branches:
-      - main
-      - develop
-      - 'feature/**'
+    branches: [ main ]
   pull_request:
-    branches:
-      - main
-      - develop
+    branches: [ main ]
 
 jobs:
-  build-and-test:
+
+  # ─────────────────────────────────────────
+  # JOB 1 — Build & Test Spring Boot Backend
+  # ─────────────────────────────────────────
+  backend:
+    name: Backend — Spring Boot (Java 17)
     runs-on: ubuntu-latest
+
+    env:
+      MONGODB_URI: ${{ secrets.MONGODB_URI }}   # Store in GitHub Secrets
 
     steps:
       - name: Checkout code
@@ -25,22 +27,55 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
+          cache: maven
 
-      - name: Cache Maven packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
+      - name: Build & run tests
+        working-directory: backend
+        run: ./mvnw clean verify --no-transfer-progress
 
-      - name: Build and run all tests
-        working-directory: ./oceanview/backend
-        run: ./mvnw test
-
-      - name: Upload test results
-        uses: actions/upload-artifact@v4
+      - name: Upload test reports
         if: always()
+        uses: actions/upload-artifact@v4
         with:
-          name: test-results
-          path: oceanview/backend/target/surefire-reports/
+          name: backend-test-reports
+          path: backend/target/surefire-reports/
+
+  # ─────────────────────────────────────────
+  # JOB 2 — Build & Test React Frontend
+  # ─────────────────────────────────────────
+  frontend:
+    name: Frontend — React + Vite
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/oceanview-frontend/package-lock.json
+
+      - name: Install dependencies
+        working-directory: frontend/oceanview-frontend
+        run: npm ci
+
+      - name: Lint
+        working-directory: frontend/oceanview-frontend
+        run: npm run lint --if-present
+
+      - name: Build
+        working-directory: frontend/oceanview-frontend
+        run: npm run build
+
+      - name: Run tests
+        working-directory: frontend/oceanview-frontend
+        run: npm test --if-present -- --run
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: frontend/oceanview-frontend/dist/
