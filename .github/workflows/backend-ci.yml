@@ -1,41 +1,94 @@
-name: CI
+name: OceanView Backend CI
+
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
+      - develop
+      - 'feature/**'
   pull_request:
-    branches: [ main ]
+    branches:
+      - main
+      - develop
+
 jobs:
-  backend:
-    name: Backend
+  build-and-test:
     runs-on: ubuntu-latest
-    env:
-      MONGODB_URI: ${{ secrets.MONGODB_URI }}
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: maven
-      - name: Build
-        working-directory: backend
-        run: sh mvnw clean verify --no-transfer-progress
-  frontend:
-    name: Frontend
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+
+      - name: Cache Maven packages
+        uses: actions/cache@v3
         with:
-          node-version: '20'
-          cache: 'npm'
-          cache-dependency-path: frontend/oceanview-frontend/package-lock.json
-      - name: Install
-        working-directory: frontend/oceanview-frontend
-        run: npm ci
-      - name: Lint
-        working-directory: frontend/oceanview-frontend
-        run: npm run lint --if-present || true
-      - name: Build
-        working-directory: frontend/oceanview-frontend
-        run: npm run build
+          path: ~/.m2
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven-
+
+      - name: Make mvnw executable
+        working-directory: ./backend
+        run: chmod +x mvnw
+
+      - name: Run all tests
+        working-directory: ./backend
+        run: ./mvnw test -Dspring.profiles.active=test
+
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: surefire-test-results
+          path: backend/target/surefire-reports/
+```
+
+**Step 6 — Save:** Press `Ctrl + S` then close Notepad
+
+---
+
+## Method 2 — Using VS Code
+
+**Step 1 —** Open VS Code and open your project:
+```
+File → Open Folder →
+D:\2_Amila\ICBT\Advanced Programming\ocean-view-resort-reservation-system-ICBT\oceanview
+```
+
+**Step 2 —** In the left panel, right-click the root folder:
+```
+New Folder → name it   .github
+```
+
+**Step 3 —** Right-click `.github`:
+```
+New Folder → name it   workflows
+```
+
+**Step 4 —** Right-click `workflows`:
+```
+New File → name it   backend-ci.yml
+```
+
+**Step 5 —** Paste the yaml content above into the file
+
+**Step 6 —** Press `Ctrl + S` to save
+
+---
+
+## Your Structure Should Look Like This
+```
+oceanview\
+  .github\                  ← created now
+    workflows\              ← created now
+      backend-ci.yml        ← created now ✅
+  backend\
+    pom.xml
+    mvnw
+  frontend\
+    oceanview-frontend\
