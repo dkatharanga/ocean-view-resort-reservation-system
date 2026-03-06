@@ -31,6 +31,8 @@ jobs:
 
       - name: Build with Maven
         run: mvn clean install --batch-mode
+        working-directory: ./oceanview
 
       - name: Run tests
         run: mvn test
+        working-directory: ./oceanview
