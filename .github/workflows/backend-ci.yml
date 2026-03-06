@@ -31,7 +31,7 @@ jobs:
 
       - name: Build & run tests
         working-directory: backend
-        run: ./mvnw clean verify --no-transfer-progress
+        run: sh mvnw clean verify --no-transfer-progress
 
       - name: Upload test reports
         if: always()
