@@ -23,15 +23,15 @@ jobs:
           java-version: 17
           cache: maven
 
-      # 3. Build project
+      # 3. Build backend project
       - name: Build backend with Maven
         run: mvn -f backend/pom.xml clean install --batch-mode
 
-      # 4. Run tests
+      # 4. Run backend tests
       - name: Run backend tests
         run: mvn -f backend/pom.xml test
 
-      # 5. Upload JAR artifact
+      # 5. Upload backend JAR artifact
       - name: Upload backend JAR artifact
         uses: actions/upload-artifact@v4
         with:
