@@ -1,23 +1,15 @@
 name: CI
-
 on:
   push:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-
 jobs:
-
-  # ─────────────────────────────────────────
-  # JOB 1 — Build & Test Spring Boot Backend
-  # ─────────────────────────────────────────
   backend:
     name: Backend — Spring Boot (Java 17)
     runs-on: ubuntu-latest
-
     env:
-      MONGODB_URI: ${{ secrets.MONGODB_URI }}   # Store in GitHub Secrets
-
+      MONGODB_URI: ${{ secrets.MONGODB_URI }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -40,13 +32,9 @@ jobs:
           name: backend-test-reports
           path: backend/target/surefire-reports/
 
-  # ─────────────────────────────────────────
-  # JOB 2 — Build & Test React Frontend
-  # ─────────────────────────────────────────
   frontend:
     name: Frontend — React + Vite
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
