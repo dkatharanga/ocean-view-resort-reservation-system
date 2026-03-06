@@ -24,16 +24,16 @@ jobs:
           cache: maven
 
       # 3. Build project
-      - name: Build with Maven
+      - name: Build backend with Maven
         run: mvn -f backend/pom.xml clean install --batch-mode
 
       # 4. Run tests
-      - name: Run tests
+      - name: Run backend tests
         run: mvn -f backend/pom.xml test
 
       # 5. Upload JAR artifact
-      - name: Upload JAR artifact
+      - name: Upload backend JAR artifact
         uses: actions/upload-artifact@v4
         with:
-          name: oceanview-backend-jar
+          name: backend-jar
           path: backend/target/*.jar
