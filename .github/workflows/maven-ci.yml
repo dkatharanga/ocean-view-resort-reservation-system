@@ -31,14 +31,14 @@ jobs:
 
       - name: Build with Maven
         run: mvn clean install --batch-mode
-        working-directory: ./oceanview
+        working-directory: oceanview/backend
 
       - name: Run tests
         run: mvn test
-        working-directory: ./oceanview
+        working-directory: oceanview/backend
 
       - name: Upload JAR artifact
         uses: actions/upload-artifact@v4
         with:
           name: oceanview-backend-jar
-          path: ./oceanview/target/*.jar
+          path: oceanview/backend/target/*.jar
