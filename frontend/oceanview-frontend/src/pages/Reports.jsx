@@ -123,7 +123,7 @@ function Reports() {
       const data = Array.isArray(res.data) ? res.data : [];
       setReservations(data);
       setFiltered(data);
-    } catch (_err) {
+    } catch {
       toast.error("Failed to load report data");
     } finally {
       setLoading(false);

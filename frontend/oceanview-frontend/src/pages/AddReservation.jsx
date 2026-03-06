@@ -36,7 +36,7 @@ const AddReservation = () => {
       setLoading(true);
       const res = await API.get("/api/reservations");
       setReservations(Array.isArray(res.data) ? res.data : []);
-    } catch (_err) {
+    } catch {
       toast.error("Failed to load reservations");
     } finally {
       setLoading(false);
@@ -102,7 +102,7 @@ const AddReservation = () => {
       });
 
       loadReservations();
-    } catch (_err) {
+    } catch {
       toast.error(editId ? "Error updating reservation" : "Error adding reservation");
     }
   };
@@ -140,7 +140,7 @@ const AddReservation = () => {
       await API.delete(`/api/reservations/${id}`);
       toast.success("Reservation deleted");
       loadReservations();
-    } catch (_err) {
+    } catch {
       toast.error("Error deleting reservation");
     }
   };
@@ -160,7 +160,7 @@ const AddReservation = () => {
       });
       toast.success(`Status changed to ${newStatus}`);
       loadReservations();
-    } catch (_err) {
+    } catch {
       toast.error("Error updating status");
     }
   };
