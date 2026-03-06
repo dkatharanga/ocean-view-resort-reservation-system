@@ -42,7 +42,7 @@ jobs:
         run: mvn test
         working-directory: ./oceanview
 
-      # 6. Upload JAR as artifact (optional)
+      # 6. Upload JAR as artifact
       - name: Upload JAR artifact
         uses: actions/upload-artifact@v3
         with:
