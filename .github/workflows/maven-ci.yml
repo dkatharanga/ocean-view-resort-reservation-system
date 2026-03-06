@@ -2,22 +2,20 @@ name: Java CI with Maven
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ main ]
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-
       # 1 Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # 2 Setup Java
+      # 2 Setup Java 17
       - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
