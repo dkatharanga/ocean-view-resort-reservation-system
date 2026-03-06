@@ -30,18 +30,19 @@ function UserManagement() {
   const [search, setSearch]     = useState("");
   const [currentUser]           = useState(() => JSON.parse(localStorage.getItem("user") || "{}"));
 
+  // ✅ Added currentUser?.id and currentUser?.role to dependency array
   useEffect(() => {
     if (!currentUser?.id) {
       window.location.href = "/login";
       return;
     }
-    if (currentUser.role !== "ADMIN") {
+    if (currentUser?.role !== "ADMIN") {
       toast.error("Admin access required");
       window.location.href = "/dashboard";
       return;
     }
     fetchUsers();
-  }, []);
+  }, [currentUser?.id, currentUser?.role]);
 
   async function fetchUsers() {
     try {

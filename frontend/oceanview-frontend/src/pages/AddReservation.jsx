@@ -36,7 +36,7 @@ const AddReservation = () => {
       setLoading(true);
       const res = await API.get("/api/reservations");
       setReservations(Array.isArray(res.data) ? res.data : []);
-    } catch (err) {
+    } catch (_err) {
       toast.error("Failed to load reservations");
     } finally {
       setLoading(false);
@@ -102,7 +102,7 @@ const AddReservation = () => {
       });
 
       loadReservations();
-    } catch (err) {
+    } catch (_err) {
       toast.error(editId ? "Error updating reservation" : "Error adding reservation");
     }
   };
@@ -140,7 +140,7 @@ const AddReservation = () => {
       await API.delete(`/api/reservations/${id}`);
       toast.success("Reservation deleted");
       loadReservations();
-    } catch (err) {
+    } catch (_err) {
       toast.error("Error deleting reservation");
     }
   };
@@ -160,7 +160,7 @@ const AddReservation = () => {
       });
       toast.success(`Status changed to ${newStatus}`);
       loadReservations();
-    } catch (err) {
+    } catch (_err) {
       toast.error("Error updating status");
     }
   };
@@ -235,7 +235,7 @@ const AddReservation = () => {
             <DashboardCard title="Cancelled"  value={reservations.filter(r => r.status === "Cancelled").length} />
           </div>
 
-          {/* ✅ FULL WIDTH FORM */}
+          {/* FULL WIDTH FORM */}
           <div style={{
             background: "#fff",
             borderRadius: "10px",
@@ -272,7 +272,7 @@ const AddReservation = () => {
                 </div>
               </div>
 
-              {/* ROW 2 — address spans 2, dates take 1 each */}
+              {/* ROW 2 */}
               <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "16px", marginBottom: "16px" }}>
                 <div style={{ gridColumn: "span 2" }}>
                   <label style={labelStyle}>Address</label>
@@ -336,7 +336,7 @@ const AddReservation = () => {
             </form>
           </div>
 
-          {/* ✅ FULL WIDTH TABLE */}
+          {/* FULL WIDTH TABLE */}
           <div style={{
             background: "#fff",
             borderRadius: "10px",

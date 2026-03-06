@@ -34,25 +34,26 @@ function BarChart({ data, title, color }) {
 function PieChart({ data, title }) {
   const COLORS = ["#0d6efd", "#198754", "#ffc107", "#dc3545", "#6f42c1", "#0dcaf0"];
   const total = data.reduce((s, d) => s + d.value, 0) || 1;
-  let cumulative = 0;
 
-  const slices = data.map((d, i) => {
+  // ✅ Use reduce instead of mutating a let variable — fixes react-hooks/immutability
+  const slices = data.reduce((acc, d, i) => {
     const pct = d.value / total;
-    const startAngle = cumulative * 2 * Math.PI - Math.PI / 2;
-    cumulative += pct;
-    const endAngle = cumulative * 2 * Math.PI - Math.PI / 2;
+    const startAngle = acc.cumulative * 2 * Math.PI - Math.PI / 2;
+    const newCumulative = acc.cumulative + pct;
+    const endAngle = newCumulative * 2 * Math.PI - Math.PI / 2;
     const x1 = 80 + 70 * Math.cos(startAngle);
     const y1 = 80 + 70 * Math.sin(startAngle);
     const x2 = 80 + 70 * Math.cos(endAngle);
     const y2 = 80 + 70 * Math.sin(endAngle);
     const largeArc = pct > 0.5 ? 1 : 0;
-    return {
+    const slice = {
       label: d.label,
       value: d.value,
       color: COLORS[i % COLORS.length],
       path: `M 80 80 L ${x1} ${y1} A 70 70 0 ${largeArc} 1 ${x2} ${y2} Z`,
     };
-  });
+    return { slices: [...acc.slices, slice], cumulative: newCumulative };
+  }, { slices: [], cumulative: 0 }).slices;
 
   return (
     <div style={{ background: "#fff", borderRadius: 10, padding: 20, boxShadow: "0 2px 8px rgba(0,0,0,0.08)" }}>
@@ -122,7 +123,7 @@ function Reports() {
       const data = Array.isArray(res.data) ? res.data : [];
       setReservations(data);
       setFiltered(data);
-    } catch (err) {
+    } catch (_err) {
       toast.error("Failed to load report data");
     } finally {
       setLoading(false);
