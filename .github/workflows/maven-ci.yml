@@ -11,29 +11,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      
       - name: Setup Java 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
-          java-version: 17
+          java-version: '17'
           cache: maven
 
-      
+      - name: Make mvnw executable
+        run: chmod +x mvnw
+        working-directory: oceanview/backend
+
       - name: Build backend with Maven
-        run: mvn -f backend/pom.xml clean install --batch-mode
+        run: ./mvnw clean install --batch-mode -DskipTests
+        working-directory: oceanview/backend
 
-      
       - name: Run backend tests
-        run: mvn -f backend/pom.xml test
+        run: ./mvnw test --batch-mode
+        working-directory: oceanview/backend
 
-     
       - name: Upload backend JAR artifact
         uses: actions/upload-artifact@v4
         with:
           name: backend-jar
-          path: backend/target/*.jar
+          path: oceanview/backend/target/*.jar
