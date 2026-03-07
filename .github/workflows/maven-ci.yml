@@ -1,4 +1,4 @@
-  name: Java CI with Maven
+ name: Java CI with Maven
 
   on:
     push:
@@ -24,18 +24,18 @@
 
         - name: Make mvnw executable
           run: chmod +x mvnw
-          working-directory: oceanview/backend
+          working-directory: oceanview
 
         - name: Build backend with Maven
           run: ./mvnw clean install -DskipTests --batch-mode
-          working-directory: oceanview/backend
+          working-directory: oceanview
 
         - name: Run backend tests
           run: ./mvnw test -DskipTests --batch-mode
-          working-directory: oceanview/backend
+          working-directory: oceanview
 
         - name: Upload backend JAR artifact
           uses: actions/upload-artifact@v4
           with:
             name: backend-jar
-            path: oceanview/backend/target/*.jar
+            path: oceanview/target/*.jar
