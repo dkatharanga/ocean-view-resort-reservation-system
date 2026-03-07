@@ -84,7 +84,8 @@ public class ValidationService {
     }
 
     // ── Status Validation ──────────────────────────────────────────────────────
-    public boolean isValidStatus(String status) {
-        return List.of("Pending", "Confirmed", "Checked-In", "Checked-Out", "Cancelled").contains(status);
-    }
+  public boolean isValidStatus(String status) {
+      if (status == null) return false;   // ← add this line
+      return List.of("Pending", "Confirmed", "Checked-In", "Checked-Out", "Cancelled").contains(status);
+  }
 }
